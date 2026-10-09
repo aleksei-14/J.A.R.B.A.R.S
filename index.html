@@ -139,5 +139,113 @@ async function perguntarAoJarbas(mensagem) {
 }
 </script>
 
+<style>
+  #jarbas-chat {
+    max-width: 600px;
+    margin: 24px auto;
+    padding: 18px;
+    border: 1px solid #2388ff;
+    border-radius: 16px;
+    background: #071426;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+
+  #jarbas-chat h2 {
+    color: #65b5ff;
+    text-align: center;
+  }
+
+  #jarbas-resposta {
+    min-height: 70px;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 10px;
+    background: #10243d;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  #jarbas-mensagem {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #428cff;
+    background: #ffffff;
+    color: #111111;
+    font-size: 16px;
+  }
+
+  #jarbas-enviar {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px;
+    border: 0;
+    border-radius: 8px;
+    background: #1677ff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+  }
+</style>
+
+<section id="jarbas-chat">
+  <h2>J.A.R.B.A.S. — Assistente</h2>
+  <p>Estou pronto para conversar com você.</p>
+
+  <div id="jarbas-resposta" role="status">
+    Aguardando sua mensagem...
+  </div>
+
+  <form id="jarbas-form">
+    <input
+      id="jarbas-mensagem"
+      type="text"
+      maxlength="2000"
+      placeholder="Digite sua mensagem..."
+      autocomplete="off"
+      required
+    />
+    <button id="jarbas-enviar" type="submit">
+      Enviar mensagem
+    </button>
+  </form>
+</section>
+
+<script>
+document.getElementById("jarbas-form").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const campo = document.getElementById("jarbas-mensagem");
+  const resposta = document.getElementById("jarbas-resposta");
+  const botao = document.getElementById("jarbas-enviar");
+  const mensagem = campo.value.trim();
+
+  if (!mensagem) return;
+
+  botao.disabled = true;
+  resposta.textContent = "J.A.R.B.A.S. está pensando...";
+
+  try {
+    const texto = await perguntarAoJarbas(mensagem);
+    resposta.textContent = texto;
+
+    if ("speechSynthesis" in window) {
+      const fala = new SpeechSynthesisUtterance(texto);
+      fala.lang = "pt-BR";
+      fala.rate = 0.88;
+      fala.pitch = 0.82;
+      window.speechSynthesis.speak(fala);
+    }
+  } catch (erro) {
+    resposta.textContent =
+      "Não consegui falar com a IA. Confira a conexão e tente novamente.";
+  } finally {
+    botao.disabled = false;
+  }
+});
+</script>
+
 </body>
 </html>
