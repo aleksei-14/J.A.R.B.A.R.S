@@ -116,5 +116,28 @@ function saudar() {
 }
 
   </script>
+  
+<script>
+const JARBAS_WORKER_URL = "https://jarbas-api.arisveltonnicolas670.workers.dev/chat";
+
+async function perguntarAoJarbas(mensagem) {
+  const resposta = await fetch(JARBAS_WORKER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message: mensagem })
+  });
+
+  const dados = await resposta.json();
+
+  if (!resposta.ok) {
+    throw new Error(dados.error || "Não consegui conectar à IA.");
+  }
+
+  return dados.reply;
+}
+</script>
+
 </body>
 </html>
