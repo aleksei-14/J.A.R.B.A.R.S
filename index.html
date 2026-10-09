@@ -92,10 +92,29 @@
   </main>
 
   <script>
-    function saudar() {
-      document.getElementById("resposta").textContent =
-        "À sua disposição, senhor. Sistemas prontos para a próxima etapa.";
-    }
+    
+function saudar() {
+  const mensagem =
+    "À sua disposição, senhor. Sistemas prontos para a próxima etapa.";
+
+  document.getElementById("resposta").textContent = mensagem;
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+
+    const fala = new SpeechSynthesisUtterance(mensagem);
+    fala.lang = "pt-BR";
+    fala.rate = 0.88;
+    fala.pitch = 0.82;
+    fala.volume = 1;
+
+    window.speechSynthesis.speak(fala);
+  } else {
+    document.getElementById("resposta").textContent =
+      mensagem + " A voz não está disponível neste navegador.";
+  }
+}
+
   </script>
 </body>
 </html>
